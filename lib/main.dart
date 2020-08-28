@@ -4,6 +4,7 @@ import './transaction.dart';
 //자동으로 채워주는걸 지우고,,
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 
 void main() => runApp(MyApp());
@@ -89,7 +90,9 @@ class MyHomePage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          tx.date.toString(),
+                          //tx.date.toString(),
+                          //intl 패키지로 날짜 설정.
+                          DateFormat.yMMMd().format(tx.date),
                           style: TextStyle(
                             color: Colors.grey,
                           ),
