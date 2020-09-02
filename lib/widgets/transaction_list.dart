@@ -14,9 +14,10 @@ class TransactionList extends StatelessWidget {
       height: 350,
 //      child: SingleChildScrollView(
 //        child: Column(
-      child: ListView(
-        //여길 List.map.toList 로 채움.. 이러면 보기 조금 어려운뎅,,?
-        children: transactions.map((tx) {
+      child: ListView.builder(
+        //ctx 보면 buildcontext ctx 네? 자동적으로..?
+        itemCount: transactions.length,
+        itemBuilder: (ctx, index) {
           return Card(
             child: Row(
               children: <Widget>[
@@ -33,7 +34,7 @@ class TransactionList extends StatelessWidget {
                   ),
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    '\$${tx.amount}',
+                    '\$${transactions[index].amount}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -45,7 +46,7 @@ class TransactionList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      tx.title,
+                      transactions[index].title,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -53,7 +54,7 @@ class TransactionList extends StatelessWidget {
                     ),
                     Text(
                       //intl 패키지로 날짜 설정.
-                      DateFormat.yMMMd().format(tx.date),
+                      DateFormat.yMMMd().format(transactions[index].date),
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -63,7 +64,7 @@ class TransactionList extends StatelessWidget {
               ],
             ),
           );
-        }).toList(),
+        },
       ),
 //        ),
 //      ),
