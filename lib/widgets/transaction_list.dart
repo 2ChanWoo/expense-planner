@@ -21,7 +21,7 @@ class TransactionList extends StatelessWidget {
         //ctx 보면 buildcontext ctx 네? 자동적으로..?
         itemCount: transactions.length,
         itemBuilder: (ctx, index) {
-          return throwList(transactions[index]);
+          return throwList(transactions[index], context);
         },
       ),
      //////////////////////////////////////////////
@@ -36,8 +36,8 @@ class TransactionList extends StatelessWidget {
 //      ),
     );
   }
-
-  Widget throwList(Transaction tx) {
+////////////////////////////////////////////////////////////////////////////////
+  Widget throwList(Transaction tx, BuildContext ctx) {
     return Card(
       child: Row(
         children: <Widget>[
@@ -48,7 +48,7 @@ class TransactionList extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               border: Border.all(
-                color: Colors.purple,
+                color: Theme.of(ctx).primaryColorLight,
                 width: 2,
               ),
             ),
@@ -58,7 +58,7 @@ class TransactionList extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
-                color: Colors.purple,
+                color: Theme.of(ctx).primaryColorDark,
               ),
             ),
           ),

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   final Function addTx;
   NewTransaction(this.addTx);
-  // String titleInput;   //TextEditingController 로 편하게 수정.
-  // String amountInput;
-  /*
-  TextEditingController 으로 직접 data할당해서 하는 것 보다 편하게? 동작시킬 수 있음.
-   */
+
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
 
+  //93. 강의보면, 5:43 에 뭐가 더 많이 있는데 나는 건더띄었는데..? 특히 widget.addTx
+
   void submitData() {
-    addTx(
+    widget.addTx(
       titleController.text,
       double.parse(amountController.text),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,8 @@ class NewTransaction extends StatelessWidget {
               child: Text('Add Transaction'),
               textColor: Colors.purple,
               onPressed: submitData,
+              //이렇게 하는 이유는 아마, 입력받은 문자열들을 검수할 때,
+              //지저분하게 onPressed 에 작성하는 것 보다, 다른 함수에서 처리하는게 깔끔하기 때문인건가?
             ),
           ],
         ),
