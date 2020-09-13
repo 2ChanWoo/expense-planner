@@ -11,20 +11,38 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 350,
+      height: 300,
 //      child: SingleChildScrollView(
 //        child: Column(
 
-    //////////////////////////////////////////////
-      child: ListView.builder(
-        reverse: true,
-        //ctx 보면 buildcontext ctx 네? 자동적으로..?
-        itemCount: transactions.length,
-        itemBuilder: (ctx, index) {
-          return throwList(transactions[index], context);
-        },
-      ),
-     //////////////////////////////////////////////
+      //////////////////////////////////////////////
+      child: transactions.isEmpty
+          ? Column(
+              children: <Widget>[
+                Text(
+                  'No transactions added yet!',
+                  style: Theme.of(context).textTheme.headline6,
+                  //style: ,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 200,
+                  child: Image.asset('assets/images/waiting.png'),
+                ),
+                //직계 위젯이 Column이라 무제한 높이라, 오버픽셀발생
+              ],
+            )
+          : ListView.builder(
+              reverse: true,
+              //ctx 보면 buildcontext ctx 네? 자동적으로..?
+              itemCount: transactions.length,
+              itemBuilder: (ctx, index) {
+                return throwList(transactions[index], context);
+              },
+            ),
+      //////////////////////////////////////////////
 
 /*
       child: ListView(
@@ -36,6 +54,7 @@ class TransactionList extends StatelessWidget {
 //      ),
     );
   }
+
 ////////////////////////////////////////////////////////////////////////////////
   Widget throwList(Transaction tx, BuildContext ctx) {
     return Card(
@@ -86,4 +105,3 @@ class TransactionList extends StatelessWidget {
     );
   }
 }
-
