@@ -86,10 +86,7 @@ class TransactionList extends StatelessWidget {
             children: <Widget>[
               Text(
                 tx.title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(ctx).textTheme.headline6,
               ),
               Text(
                 //intl 패키지로 날짜 설정.

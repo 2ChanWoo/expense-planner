@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
         accentColor: Colors.amber,
+        //errorColor: Colors.red, // 디폴트값이 red이기 때문에, red로 할 경우는 굳이 할 필요 없음.
         //머테리얼 디자인 중, primary 색상보다 accentColor 가 우선되는 것들이 있다.
         //그 중 하나가 Floating button이다
         //이 경우, accentColor가 있으면 해당 색상으로, 없다면 하위설정인 primary 색상이 적용된다.
@@ -41,11 +42,13 @@ class MyApp extends StatelessWidget {
 
         //위에 것이 appbarTheme이라 그런거였나,, textTheme도 새로만드니 bold까지 추가가 되네.
         textTheme: ThemeData.light().textTheme.copyWith(
-                headline6: TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            )),
+              headline6: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              button: TextStyle(color: Colors.white),
+            ),
       ),
     );
   }
@@ -106,11 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: chosenDate,
       id: DateTime.now().toString(),
     );
 

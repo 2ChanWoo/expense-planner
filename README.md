@@ -16,6 +16,19 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 ## 20.09.12
+- add DatePicker
+
+use with Future.then
+
+Then이라고 해서 순서대로 되는 것이 아님.
+
+Then이 여러차례 되어있으면 (.then(~).then(~)) 첫번쨰 then의 내용이 끝나야 다음으로 넘어가는 것이 아님.
+
+두번째 then이 먼저 끝날 수 있으면, 두번째 부터 처리된 후 첫번째가 처리될 수 있음.
+
+
+
+## 20.09.12
 - FractionallySizedBox 적용
 Container와 겹쳐서 사용하는 FractionallySizedBox 을 적용시켜, 그래프 차트처럼 보이게 적용시킴.
 **주의** _FractionallySizedBox 에서의 heightFactor 가 NaN인 경우에 Error 발생함._
@@ -25,7 +38,13 @@ Container와 겹쳐서 사용하는 FractionallySizedBox 을 적용시켜, 그�
 - **Shared Preferences** 값을 기기 저장소에 저장. 앱을 껏다 켜도 설정값 유지되게 하는 기능!
 
 - Flexible – fit: FlexFit.tight 를 사용하면, 공간을 엄격하게 관리.!
+
 mainAxisAlignment 와 같은 기능이지만, mainAxisAlignment는 위젯의 크기가 달라지면 균형이 무너지지.
+
+Flexible 은 하위 위젯의 크기를 제한하는 힘을 가지고 있구나.!
+
+++flex 사용가능하고, FlexFit.tight 을 디폴트로 가지고 있는 위젯 :: Expanded
+
 
 - List.fold() , List.reduce()
 
