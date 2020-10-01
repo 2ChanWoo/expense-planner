@@ -45,18 +45,22 @@ class Chart extends StatelessWidget {
     return Card(
       elevation: 6,
       margin: EdgeInsets.all(20),
-      child: Row(
-       mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: groundTransactionValues.map((e) {
-          return Flexible(
-            fit: FlexFit.tight,
-            child:  ChartBar(
-            e['day'],
-            e['amount'],
-            totalSpending == 0.0 ? 0.0 : (e['amount'] as double) / totalSpending,
-          )
-          );
-        }).toList(),
+      child: Container(
+        padding: EdgeInsets.all(10.0),
+        //margin: EdgeInsets.all(10.0),   패딩이나 마진이나~
+        child: Row(
+         mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groundTransactionValues.map((e) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child:  ChartBar(
+              e['day'],
+              e['amount'],
+              totalSpending == 0.0 ? 0.0 : (e['amount'] as double) / totalSpending,
+            )
+            );
+          }).toList(),
+        ),
       ),
     );
 //    return Card(

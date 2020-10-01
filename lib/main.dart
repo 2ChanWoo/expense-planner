@@ -6,10 +6,19 @@ import 'package:expense_planner/widgets/new_transaction.dart';
 import 'package:expense_planner/widgets/transaction_list.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './models/transaction.dart';
 import './widgets/chart.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  //앱을 껏다 켜야 적용이 됐음.. ㅁㅈ
+//  WidgetsFlutterBinding.ensureInitialized();
+//  SystemChrome.setPreferredOrientations([
+//    DeviceOrientation.portraitUp,
+//    DeviceOrientation.portraitDown,
+//  ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -61,42 +70,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-//    Transaction(
-//      id: 't1',
-//      title: 'New Shoes',
-//      amount: 69.99,
-//      date: DateTime.now(),
-//    ),
-//    Transaction(
-//      id: 't2',
-//      title: 'Weekly Groceries',
-//      amount: 16.53,
-//      date: DateTime.now(),
-//    ),
-//    Transaction(
-//      id: 't3',
-//      title: 'Lotto',
-//      amount: 4.99,
-//      date: DateTime.now(),
-//    ),
-//    Transaction(
-//      id: 't4',
-//      title: 'SoJu',
-//      amount: 1.6,
-//      date: DateTime.now(),
-//    ),
-//    Transaction(
-//      id: 't5',
-//      title: 'cigarette',
-//      amount: 4.5,
-//      date: DateTime.now(),
-//    ),
-//    Transaction(
-//      id: 't6',
-//      title: 'KT mobile',
-//      amount: 69.99,
-//      date: DateTime.now(),
-//    ),
+//    Transaction( id: 't1',title: 'New Shoes',amount: 69.99,date: DateTime.now(),),
+//    Transaction(id: 't2',title: 'Weekly Groceries',amount: 16.53,date: DateTime.now(),),
+//    Transaction(id: 't3',title: 'Lotto',amount: 4.99,date: DateTime.now(),),
+//    Transaction(id: 't4',title: 'SoJu',amount: 1.6,date: DateTime.now(),),
+//    Transaction(id: 't5',title: 'cigarette',amount: 4.5,date: DateTime.now(),),
+//    Transaction(id: 't6',title: 'KT mobile',amount: 69.99,date: DateTime.now(),),
   ];
 
   List<Transaction> get _recentTransaction {
@@ -109,7 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
@@ -122,15 +102,47 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _deleteTransaction(String id) {
+    //reBuild 되기 위해서 필요. setState.
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
+  bool _showChart = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Personal Expenses',
-          //style: Theme.of(context).textTheme.headline6, //theme에서 정의안하고 이렇게 디폴트로 쓰네,, --?
-        ),
+    final bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final _appbar = AppBar(
+      title: Text(
+        'Personal Expenses',
+        //style: Theme.of(context).textTheme.headline6, //theme에서 정의안하고 이렇게 디폴트로 쓰네,, --?
       ),
+    );
+
+    Widget _chartBox(double high) {
+      return Container(
+        height: (MediaQuery.of(context).size.height -
+                _appbar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            high,
+        child: Chart(_recentTransaction),
+      );
+    }
+
+    final _listBox = Container(
+      height: (MediaQuery.of(context).size.height -
+              _appbar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
+
+    return Scaffold(
+      appBar: _appbar,
       body: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
@@ -147,8 +159,29 @@ class _MyHomePageState extends State<MyHomePage> {
 //                elevation: 5,
 //              ),
 //            ),
-            Chart(_recentTransaction),
-            TransactionList(_userTransactions),
+            //////////////////////////////////////////////////////가로모드 일 경우
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Show Chart'),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (val) {
+                        setState(() {
+                          _showChart = val;
+                          //_showChart = !_showChart;   //두개 다 됨
+                        });
+                      }),
+                ],
+              ),
+            if (isLandscape)
+              _showChart ? _chartBox(0.7) : _listBox,
+            //////////////////////////////////////////////////////가로모드가 아닐 경우
+            if (!isLandscape)
+              _chartBox(0.3),
+            if (!isLandscape)
+              _listBox,
           ],
         ),
       ),
@@ -165,6 +198,8 @@ class _MyHomePageState extends State<MyHomePage> {
       context: ctx,
       builder: (_) {
         return NewTransaction(_addNewTransaction);
+        //강의에서는 GestureDetector 이 추가되어있는데,
+        // ModalSheet 이외의 부분을 누르면 Enqueue되게 하려는 거였나? 까묵었넹.. 맞을듯~
       },
     );
   }

@@ -15,7 +15,24 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-## 20.09.12
+## 20.10.01
+- Distinguish landscape mode and portrait mode
+- use MediaQuery, textScaleFactor, LayoutBuilder
+주석처리 했지만, main() 함수에서 세로모드로 고정시킬 수 있는 명령어를 처리해봤고
+
+MediaQuery, textScaleFactor, LayoutBuilder 를 사용해서
+
+각 위젯들의 크기 비율을 핸드폰 크기에 따라 맞춰주었다.
+
+### **MediaQuery를 이용해서 100% 크기를 맞추면 초과됨.!**
+
+#### _   ㄴ> 앱바와, 상태표시줄의 높이를 제거해야 사용할 수 있는 크기 100%를 가질 수 있다.!!!! _
+
+textScaleFactor : 사용 화면의 크기에 따라 글씨 크기를 조정할 수 있다.
+
+LayoutBuilder : builder 의 2번째 매개변수로 상위 위젯의 최대크기에 따라 크기 조정 가능.
+
+## 20.09.14
 - add DatePicker
 
 use with Future.then
@@ -27,9 +44,9 @@ Then이 여러차례 되어있으면 (.then(~).then(~)) 첫번쨰 then의 내용
 두번째 then이 먼저 끝날 수 있으면, 두번째 부터 처리된 후 첫번째가 처리될 수 있음.
 
 
-
 ## 20.09.12
 - FractionallySizedBox 적용
+
 Container와 겹쳐서 사용하는 FractionallySizedBox 을 적용시켜, 그래프 차트처럼 보이게 적용시킴.
 **주의** _FractionallySizedBox 에서의 heightFactor 가 NaN인 경우에 Error 발생함._
 
@@ -54,10 +71,13 @@ Flexible 은 하위 위젯의 크기를 제한하는 힘을 가지고 있구나.
 PrimarySwatch 와 accentColor 설정.
 
 - 머테리얼 디자인 중, primary 색상보다 accentColor 가 우선되는 것들이 있다.
+
 그 중 하나가 Floating button이다
+
 이 경우, accentColor가 있으면 해당 색상으로, 없다면 하위설정인 primary 색상이 적용된다.
 
 - PrimarySwatch 는 PrimaryColor와 다르게, 색상을 정할 때 음영을 설정할 수 있다.!
+
 다른 차이점은 아직 잘..ㅎ  (아,! 색상도 더욱 다양한 듯 하다)
 
 - 93. 강의보면, 5:43 에 뭐가 더 많이 있는데 나는 건너띄었는데,,
