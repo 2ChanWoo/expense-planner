@@ -2,8 +2,11 @@
 //를 지우고 최상의 방법은 아니라고 위처럼 간결한 import로 변경했는데 굳이 그런 이유가 뭐지?
 //자동으로 채워주는걸 지우고,,
 
+import 'dart:io';
+
 import 'package:expense_planner/widgets/new_transaction.dart';
 import 'package:expense_planner/widgets/transaction_list.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,12 +73,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-//    Transaction( id: 't1',title: 'New Shoes',amount: 69.99,date: DateTime.now(),),
-//    Transaction(id: 't2',title: 'Weekly Groceries',amount: 16.53,date: DateTime.now(),),
-//    Transaction(id: 't3',title: 'Lotto',amount: 4.99,date: DateTime.now(),),
-//    Transaction(id: 't4',title: 'SoJu',amount: 1.6,date: DateTime.now(),),
-//    Transaction(id: 't5',title: 'cigarette',amount: 4.5,date: DateTime.now(),),
-//    Transaction(id: 't6',title: 'KT mobile',amount: 69.99,date: DateTime.now(),),
+    Transaction(
+        id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
+    Transaction(
+        id: 't2', title: 'Groceries', amount: 16.53, date: DateTime.now()),
+    Transaction(id: 't3', title: 'Lotto', amount: 4.99, date: DateTime.now()),
+    Transaction(id: 't4', title: 'SoJu', amount: 1.6, date: DateTime.now()),
+    Transaction(
+        id: 't5', title: 'cigarette', amount: 4.5, date: DateTime.now()),
+    Transaction(
+        id: 't6', title: 'KT mobile', amount: 69.99, date: DateTime.now()),
   ];
 
   List<Transaction> get _recentTransaction {
@@ -113,37 +120,60 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    //많이 쓰일경우, 변수로 저장해두어서 매번 호출되지 않도록 한다!
+    //핸드폰의 방향이 바뀔 경우, 자동으로 reBuild 되어 걱정 ㄴㄴ!
+    final mediaQuery = MediaQuery.of(context);
 
-    final _appbar = AppBar(
-      title: Text(
-        'Personal Expenses',
-        //style: Theme.of(context).textTheme.headline6, //theme에서 정의안하고 이렇게 디폴트로 쓰네,, --?
-      ),
-    );
+    final bool isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    final PreferredSizeWidget _appbar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'Personal Expenses',
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTransaction(context),
+                )
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text(
+              'Personal Expenses',
+              //style: Theme.of(context).textTheme.headline6, //theme에서 정의안하고 이렇게 디폴트로 쓰네,, --?
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => _startAddNewTransaction(context),
+              )
+            ],
+          );
 
     Widget _chartBox(double high) {
       return Container(
-        height: (MediaQuery.of(context).size.height -
+        height: (mediaQuery.size.height -
                 _appbar.preferredSize.height -
-                MediaQuery.of(context).padding.top) *
+                mediaQuery.padding.top) *
             high,
         child: Chart(_recentTransaction),
       );
     }
 
     final _listBox = Container(
-      height: (MediaQuery.of(context).size.height -
+      height: (mediaQuery.size.height -
               _appbar.preferredSize.height -
-              MediaQuery.of(context).padding.top) *
+              mediaQuery.padding.top) *
           0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
 
-    return Scaffold(
-      appBar: _appbar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -165,7 +195,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('Show Chart'),
-                  Switch(
+                  Switch.adaptive(
+                      activeColor: Theme.of(context).accentColor,
                       value: _showChart,
                       onChanged: (val) {
                         setState(() {
@@ -185,15 +216,28 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => startAddNewTransaction(context),
-      ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: _appbar,
+          )
+        : Scaffold(
+            appBar: _appbar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () => _startAddNewTransaction(context),
+                  ),
+          );
   }
 
-  void startAddNewTransaction(BuildContext ctx) {
+  void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
