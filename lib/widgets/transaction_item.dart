@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:expense_planner/models/transaction.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import '../customClasses/UniqueColorGenerator.dart';
 
-class TransactionItem extends StatelessWidget {
+class TransactionItem extends StatefulWidget {
   final Transaction transaction;
   final Function deleteTx;
 
@@ -13,10 +16,29 @@ class TransactionItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _TransactionItemState createState() => _TransactionItemState();
+}
+Color myColor;
+class _TransactionItemState extends State<TransactionItem> {
+  @override
+  void initState() {
+    const availableColors = [Colors.blue, Colors.black, Colors.red, Colors.purple, Colors.green];
+    //const myColors = UniqueColorGenerator.getColor(); //강의랑은 다르게 나는 class로 불러오는거라서 여따쓰는게 아님~
+
+    myColor = availableColors[Random().nextInt(5)];
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       child: Row(
         children: <Widget>[
+          CircleAvatar(
+           backgroundColor: myColor,
+//            backgroundColor: UniqueColorGenerator.getColor(),
+            radius: 10,
+          ),
           Container(
             margin: EdgeInsets.symmetric(
               vertical: 10,
@@ -30,7 +52,7 @@ class TransactionItem extends StatelessWidget {
             ),
             padding: EdgeInsets.all(10),
             child: Text(
-              '\$${transaction.amount.toStringAsFixed(2)}',
+              '\$${widget.transaction.amount.toStringAsFixed(2)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -42,12 +64,12 @@ class TransactionItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                transaction.title,
+                widget.transaction.title,
                 style: Theme.of(context).textTheme.headline6,
               ),
               Text(
                 //intl 패키지로 날짜 설정.
-                DateFormat.yMMMd().format(transaction.date),
+                DateFormat.yMMMd().format(widget.transaction.date),
                 style: TextStyle(
                   color: Colors.grey,
                 ),
@@ -61,12 +83,12 @@ class TransactionItem extends StatelessWidget {
                   icon: Icon(Icons.delete),
                   label: Text('delete'),
                   textColor: Theme.of(context).errorColor,
-                  onPressed: () => deleteTx(transaction.id),
+                  onPressed: () => widget.deleteTx(widget.transaction.id),
                 )
               : IconButton(
                   icon: Icon(Icons.delete),
                   color: Theme.of(context).errorColor,
-                  onPressed: () => deleteTx(transaction.id),
+                  onPressed: () => widget.deleteTx(widget.transaction.id),
                 )
         ],
       ),

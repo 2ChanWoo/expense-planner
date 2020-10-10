@@ -15,6 +15,67 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+##20.10.10
+위젯은 고유의 Context를 가지고 있다. Context는 어디에나 있으며 모든 위젯에는 Context가 연결되어 있다.
+
+위젯 층간에 인수를 사용하고 ThemeData와 MediaQuery Data를 수동으로 전달하는 것은 매우 번거로운 일일 것.
+따라서, **IngeritedWidget** 사용. (-> Context가 이곳에서 관리된다.)
+
+
+####When to use Key?
+
+대부분의 경우 키가 필요 없지만,
+동일한 상태의 동일 위젯으로 구성된 Collection을 재정렬 하거나, 추가/삭제 하는 등의 작업을 한다면, 키가 필요로 될 수 있다.!
+
+<https://www.youtube.com/watch?v=kn0EOS-ZiIc>
+
+<https://nsinc.tistory.com/214>
+
+####Key를 어디에 위치시켜야 합니까??
+요약 : 유지해야 하는 상태 정보가 있는 위젯 트리의 **최상단**에 추가해야 합니다.!
+
+##10.10.08
+
+####App LifeCycle
+
+- Inactive : 비활성화 상태.
+앱이 백그라운드에서 실행되고 있지 않음. 비활성 상태이고, 사용자가 볼 수 없으며, 사용자 입력을 수신할수 없는 상태.
+아직 메모리에서 완전히 지워지지는 않았지만 도달할 수는 있는 상태??
+
+- Paused : 중지상태.
+하지만 지금은 앱이 보이지 않을 때 이고 백그라운드에서 실행중일 때.
+마지막 순간 청소를 하기 위해? 서버 연결 해제등 작업을 수행할 수 있음??
+
+- Resumed : 다시 보이고 사용자 입력에 응답하는 경우.
+이 때는 서버에 대한 실시간 연결을 다시 설정하고 원하는지 확인하는 것이 좋습니다?
+
+- Suspending : 앱이 일시 중단되려고 할 때 도달한 상태? 거의 사라졌지만 여전히 있는 상태?
+운영 체제에 의해 지워지려고 할 때, 메모리에서 제거 하려고 할 때
+
+addObserver 에서 라이프사이클 상태가 바뀔 때마다 Observer에 가서
+didChangeAppLifeCycleState()  메소드를 호출한다?
+
+홈키를 눌러서 앱을 백그라운드 동작시키면 inactive(비활성화) – pause(중지)
+다시 앱을 실행시키면 resumed(깨어남)
+뒤로가기 키를 눌러 종료시키면 비활성화-중지-detached???
+강의 말로는 suspending 이 되어야한다는데..
+(++강의에서도 paused까지만 나오고 안나오구, 내 에뮬에서 강제종료시키면 암것두 안나옴.
+강의자 말로는 앱이 이미 꺼져서 해당 print문에 접근을 못하는듯 하다고 한다.)
+
+##20.10.05
+
+####Widget Tree & Element Tree
+Element Tree는 Widget Tree를 기반으로 플러터가 자동으로 만들고, **위젯을 실제 렌더링된 객체에 연결한다.**
+
+##20.10.04
+
+- MediaQuery.of(context).viewInsets.bottom
+키보드가 나왔을 때, 그 높이를 계산하여 해당 높이만큼 패딩을 줄 수 있음.
+
+- 가로모드, 세로모드 구분이아니라~~ 가로의 길이로만 계싼~!  **MediaQuery.of(ctx).size.width**
+
+icon과 label이 추가된 Flatbotton.icon
+
 ## 20.10.01
 - Distinguish landscape mode and portrait mode
 - use MediaQuery, textScaleFactor, LayoutBuilder
@@ -26,7 +87,7 @@ MediaQuery, textScaleFactor, LayoutBuilder 를 사용해서
 
 ### **MediaQuery를 이용해서 100% 크기를 맞추면 초과됨.!**
 
-#### _   ㄴ> 앱바와, 상태표시줄의 높이를 제거해야 사용할 수 있는 크기 100%를 가질 수 있다.!!!! _
+####  ㄴ> 앱바와, 상태표시줄의 높이를 제거해야 사용할 수 있는 크기 100%를 가질 수 있다.!!!!
 
 textScaleFactor : 사용 화면의 크기에 따라 글씨 크기를 조정할 수 있다.
 

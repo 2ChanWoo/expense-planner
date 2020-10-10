@@ -35,16 +35,20 @@ class TransactionList extends StatelessWidget {
               );
             },
           )
-        : ListView.builder(
-            reverse: true,
-            //ctx 보면 buildcontext ctx 네? 자동적으로..?
-            itemCount: transactions.length,
-            itemBuilder: (ctx, index) {
-              return TransactionItem(transaction : transactions[index], deleteTx : deleteTx);
-              // 아 나는 처음에 이렇게 했다가 뭣땜에 아래처럼 바꾼거같은데,,
-              // return throwList(transactions, index, context);
-            },
+        : ListView(
+            children: <Widget>[
+              ...transactions //children에 리스트가 하나밖에 없으면, Spread연산자 안붙여두댐 ( <Widget>[] 빼고 )
+                  .map(
+                    (tx) => TransactionItem(
+                      key: ValueKey(tx.id),
+                      transaction: tx,
+                      deleteTx: deleteTx,
+                    ),
+                  )
+                  .toList(),
+            ],
           );
+    // 아 나는 처음에 이렇게 했다가 뭣땜에 아래처럼 바꾼거같은데,,
+    // return throwList(transactions, index, context);
   }
-
 }

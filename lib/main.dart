@@ -42,10 +42,13 @@ class MyApp extends StatelessWidget {
         //ㄴ> title -> headline6 로 변경됨. 1~5는 똑같이 크기변경 등이 안되구.
         // ++light <-> dark 는 변화가 없는데?
         appBarTheme: AppBarTheme(
-            textTheme: ThemeData.light().textTheme.copyWith(
-                    //기능이 많이 없어졌는데..
-                    // 적용안됌.
-                    headline6: TextStyle(
+            textTheme: ThemeData
+                .light()
+                .textTheme
+                .copyWith(
+              //기능이 많이 없어졌는데..
+              // 적용안됌.
+                headline6: TextStyle(
                   fontFamily: 'OpenSans',
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -53,14 +56,17 @@ class MyApp extends StatelessWidget {
         ///////////////////////////////////////////////// 강의 95
 
         //위에 것이 appbarTheme이라 그런거였나,, textTheme도 새로만드니 bold까지 추가가 되네.
-        textTheme: ThemeData.light().textTheme.copyWith(
-              headline6: TextStyle(
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-              button: TextStyle(color: Colors.white),
-            ),
+        textTheme: ThemeData
+            .light()
+            .textTheme
+            .copyWith(
+          headline6: TextStyle(
+            fontFamily: 'OpenSans',
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+          button: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }
@@ -71,7 +77,26 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
+  //////////////////////////// Life Cycle Check ///////////////////////////////////////////
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('state : $state');
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+////////////////////////////////////////////////////////////////////////////////////////////
   final List<Transaction> _userTransactions = [
     Transaction(
         id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
@@ -95,8 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate) {
+  void _addNewTransaction(String txTitle, double txAmount,
+      DateTime chosenDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
@@ -118,47 +143,49 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _showChart = false;
 
+  Widget _buildAppBar() {
+    return Platform.isIOS
+        ? CupertinoNavigationBar(
+      middle: Text(
+        'Personal Expenses',
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          GestureDetector(
+            child: Icon(CupertinoIcons.add),
+            onTap: () => _startAddNewTransaction(context),
+          )
+        ],
+      ),
+    )
+        : AppBar(
+      title: Text(
+        'Personal Expenses',
+        //style: Theme.of(context).textTheme.headline6, //theme에서 정의안하고 이렇게 디폴트로 쓰네,, --?
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //많이 쓰일경우, 변수로 저장해두어서 매번 호출되지 않도록 한다!
     //핸드폰의 방향이 바뀔 경우, 자동으로 reBuild 되어 걱정 ㄴㄴ!
     final mediaQuery = MediaQuery.of(context);
-
     final bool isLandscape = mediaQuery.orientation == Orientation.landscape;
-
-    final PreferredSizeWidget _appbar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text(
-              'Personal Expenses',
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                GestureDetector(
-                  child: Icon(CupertinoIcons.add),
-                  onTap: () => _startAddNewTransaction(context),
-                )
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text(
-              'Personal Expenses',
-              //style: Theme.of(context).textTheme.headline6, //theme에서 정의안하고 이렇게 디폴트로 쓰네,, --?
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => _startAddNewTransaction(context),
-              )
-            ],
-          );
+    final PreferredSizeWidget _appbar = _buildAppBar();
 
     Widget _chartBox(double high) {
       return Container(
         height: (mediaQuery.size.height -
-                _appbar.preferredSize.height -
-                mediaQuery.padding.top) *
+            _appbar.preferredSize.height -
+            mediaQuery.padding.top) *
             high,
         child: Chart(_recentTransaction),
       );
@@ -166,11 +193,43 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final _listBox = Container(
       height: (mediaQuery.size.height -
-              _appbar.preferredSize.height -
-              mediaQuery.padding.top) *
+          _appbar.preferredSize.height -
+          mediaQuery.padding.top) *
           0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
+
+    List<Widget> _buildLandscapeContent() {
+      return [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Show Chart'),
+            Switch.adaptive(
+                activeColor: Theme
+                    .of(context)
+                    .accentColor,
+                value: _showChart,
+                onChanged: (val) {
+                  setState(() {
+                    _showChart = val;
+                    //_showChart = !_showChart;   //두개 다 됨
+                  });
+                }),
+          ],
+        ),
+
+        _showChart ? _chartBox(0.7) : _listBox
+      ];
+    }
+
+    List<Widget> _buildportraitContent() {
+      return [
+        _chartBox(0.3),
+        _listBox
+      ];
+    }
+
 
     final pageBody = SafeArea(
       child: SingleChildScrollView(
@@ -189,30 +248,11 @@ class _MyHomePageState extends State<MyHomePage> {
 //                elevation: 5,
 //              ),
 //            ),
-            //////////////////////////////////////////////////////가로모드 일 경우
-            if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Show Chart'),
-                  Switch.adaptive(
-                      activeColor: Theme.of(context).accentColor,
-                      value: _showChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showChart = val;
-                          //_showChart = !_showChart;   //두개 다 됨
-                        });
-                      }),
-                ],
-              ),
-            if (isLandscape)
-              _showChart ? _chartBox(0.7) : _listBox,
-            //////////////////////////////////////////////////////가로모드가 아닐 경우
-            if (!isLandscape)
-              _chartBox(0.3),
-            if (!isLandscape)
-              _listBox,
+            if (isLandscape)          //가로모드 일 경우
+              ..._buildLandscapeContent(),
+            if (!isLandscape)         //가로모드가 아닐 경우
+              ..._buildportraitContent(),
+            // ㄴ> 강의에서는 아예 함수로 밖에다 빼버림
           ],
         ),
       ),
@@ -220,21 +260,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            child: pageBody,
-            navigationBar: _appbar,
-          )
+      child: pageBody,
+      navigationBar: _appbar,
+    )
         : Scaffold(
-            appBar: _appbar,
-            body: pageBody,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: Platform.isIOS
-                ? Container()
-                : FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () => _startAddNewTransaction(context),
-                  ),
-          );
+      appBar: _appbar,
+      body: pageBody,
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTransaction(context),
+      ),
+    );
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
