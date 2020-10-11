@@ -26,24 +26,25 @@ class _NewTransactionState extends State<NewTransaction> {
     print('Constructor NewTranscation State');
   }
 
-  @override
-  void initState() {
-    print('initState()');
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(NewTransaction oldWidget) {
-    print('didUpdateWidget()');
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    print('dispose()');
-    super.dispose();
-  }
+  // 확인용 출력
+//  @override
+//  void initState() {
+//    print('initState()');
+//    // TODO: implement initState
+//    super.initState();
+//  }
+//
+//  @override
+//  void didUpdateWidget(NewTransaction oldWidget) {
+//    print('didUpdateWidget()');
+//    super.didUpdateWidget(oldWidget);
+//  }
+//
+//  @override
+//  void dispose() {
+//    print('dispose()');
+//    super.dispose();
+//  }
 
   //93. 강의보면, 5:43 에 뭐가 더 많이 있는데 나는 건더띄었는데..? 특히 widget.addTx
 

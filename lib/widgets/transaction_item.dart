@@ -18,19 +18,22 @@ class TransactionItem extends StatefulWidget {
   @override
   _TransactionItemState createState() => _TransactionItemState();
 }
-Color myColor;
+/////Color myColor; //// 여기있으면 안돼!!!!
+
 class _TransactionItemState extends State<TransactionItem> {
+  Color myColor;    //여기에 있어야만 색상 고정이 되요................
   @override
   void initState() {
     const availableColors = [Colors.blue, Colors.black, Colors.red, Colors.purple, Colors.green];
     //const myColors = UniqueColorGenerator.getColor(); //강의랑은 다르게 나는 class로 불러오는거라서 여따쓰는게 아님~
 
-    myColor = availableColors[Random().nextInt(5)];
+    myColor = UniqueColorGenerator.getColor();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('transaction_item build : ${widget.transaction.title}');
     return Card(
       child: Row(
         children: <Widget>[
