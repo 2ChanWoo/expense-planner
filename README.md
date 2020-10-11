@@ -14,15 +14,23 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+## 20.10.11
+#### 키 설정 완료.
+1. transaction_list 에서 ListView …, <Widget>[] 지워봄  실패
+2. transaction_item 에서 네모박스가격표시를 CircleAvartar가격표시로 똑같이 바꿔봄  실패
+Main을 통째로 바꿔도 똑같고…
+item에서 card를 통째로 바꿔도 똑같고,,,
 
-##20.10.10
+***전역변수에 할당되어 있어서 그랬음..ㅜㅜ 지역변수로 바꿔주니 잘 됩니당***
+
+## 20.10.10
 위젯은 고유의 Context를 가지고 있다. Context는 어디에나 있으며 모든 위젯에는 Context가 연결되어 있다.
 
 위젯 층간에 인수를 사용하고 ThemeData와 MediaQuery Data를 수동으로 전달하는 것은 매우 번거로운 일일 것.
 따라서, **IngeritedWidget** 사용. (-> Context가 이곳에서 관리된다.)
 
 
-####When to use Key?
+#### When to use Key?
 
 대부분의 경우 키가 필요 없지만,
 동일한 상태의 동일 위젯으로 구성된 Collection을 재정렬 하거나, 추가/삭제 하는 등의 작업을 한다면, 키가 필요로 될 수 있다.!
@@ -31,12 +39,12 @@ samples, guidance on mobile development, and a full API reference.
 
 <https://nsinc.tistory.com/214>
 
-####Key를 어디에 위치시켜야 합니까??
+#### Key를 어디에 위치시켜야 합니까??
 요약 : 유지해야 하는 상태 정보가 있는 위젯 트리의 **최상단**에 추가해야 합니다.!
 
-##10.10.08
+## 10.10.08
 
-####App LifeCycle
+#### App LifeCycle
 
 - Inactive : 비활성화 상태.
 앱이 백그라운드에서 실행되고 있지 않음. 비활성 상태이고, 사용자가 볼 수 없으며, 사용자 입력을 수신할수 없는 상태.
@@ -62,12 +70,12 @@ didChangeAppLifeCycleState()  메소드를 호출한다?
 (++강의에서도 paused까지만 나오고 안나오구, 내 에뮬에서 강제종료시키면 암것두 안나옴.
 강의자 말로는 앱이 이미 꺼져서 해당 print문에 접근을 못하는듯 하다고 한다.)
 
-##20.10.05
+## 20.10.05
 
-####Widget Tree & Element Tree
+#### Widget Tree & Element Tree
 Element Tree는 Widget Tree를 기반으로 플러터가 자동으로 만들고, **위젯을 실제 렌더링된 객체에 연결한다.**
 
-##20.10.04
+## 20.10.04
 
 - MediaQuery.of(context).viewInsets.bottom
 키보드가 나왔을 때, 그 높이를 계산하여 해당 높이만큼 패딩을 줄 수 있음.
